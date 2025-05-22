@@ -13,19 +13,30 @@
 </head>
 
 <body>
-    <h1 class="text-center my-3">Painel</h1>
+    <h1 class="text-center my-3">Home</h1>
 
-    <div class="container d-flex justify-content-center align-items-center py-2 px-3 my-xs-5">
-        <a href="cliente.html"> Cadastro de Clientes </a>
-    </div>
-    <div class="container d-flex justify-content-center align-items-center py-2 px-3 my-xs-5">
-        <a href="cliente.html"> Ordens de Serviço </a>
+    <div class="mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="mx-3 card container d-flex justify-content-center align-items-center py-2 px-3 my-xs-5" style="width: 18rem; max-height: 22rem;">
+                <img class="my-3 card-img-top img-tamanho-card" src="../public/img/icone_cadastro.png" alt="icone de cadastro de pedidos">
+                <div class="card-body">
+                    <a href="cadastropedidos.html" class="btn btn-primary">Cadastrar Pedidos</a>
+                </div>
+            </div>
+        
+            <div class="mx-3 card container d-flex justify-content-center align-items-center py-2 px-3 my-xs-5" style="width: 18rem; max-height: 22rem;">
+                <img class="my-3 card-img-top img-tamanho-card" src="../public/img/icone_pedidos.png" alt="icone de pedidos">
+                <div class="card-body">
+                    <a href="pedidos.html" class="btn btn-primary">Pedidos</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        <p id="dataAtual"></p>
-        <img id="icondb" src="../public/img/dboff.png" alt="icone banco de dados">
-    </footer>
+        <footer class="bg-primary">
+            <p id="dataAtual"></p>
+            <img id="icondb" src="../public/img/dboff.png" alt="icone banco de dados">
+        </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -52,3 +52,12 @@ footer p {
 #sobre h3 {
     color: var(--principal);
 }
+
+.img-tamanho-card {
+    width: 200px;
+}
+
+label {
+    margin-top: 3px;
+    font-size: 0.9rem;
+}

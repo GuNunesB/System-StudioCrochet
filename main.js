@@ -4,21 +4,17 @@ const path = require('node:path')
 
 const { conectar, desconectar } = require('./database.js')
 
-const pedidoModel = require('src/models/Pedidos.js')
-
-const fs = require('fs')
-
-const { jspdf, default: jsPDF } = require('jspdf')
+const pedidoModel = require('./src/models/Pedidos.js')
 
 let win
 const createWindow = () => {
   nativeTheme.themeSource = 'light'
   win = new BrowserWindow({
-    width: 1000,
+    width: 1200,
     height: 1000,
 
     webPreferences: {
-      preload: path.join(__dirname, './preload.js')
+      preload: path.join(__dirname, 'preload.js')
     }
   })
 
@@ -96,8 +92,14 @@ const templete = [
     label: 'Home',
     submenu: [
       {
-        label: 'Sair',
-        accelerator: 'Esc'
+        label: 'Voltar',
+        accelerator: 'Esc',
+        click: () => {
+          const focusedWindow = BrowserWindow.getFocusedWindow()
+          if (focusedWindow && focusedWindow.webContents.canGoBack()) {
+            focusedWindow.webContents.goBack()
+          }
+        }
       }
     ]
   },

@@ -12,23 +12,22 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-light">
+<body>
   <div class="container my-4">
     <div class="card shadow-lg">
       <div class="card-header bg-primary text-light">
         <h3 class="text-center m-0">Cadastro de Pedidos</h3>
       </div>
       <div class="card-body">
-        <form>
+        <form id="form">
           <div class="row g-3">
+            <input class="form-control d-none" id="inputIdClient" type="text">
             <div class="col-md-8">
-                <input type="text" class="form-control" id="buscarPedido" maxlength="30" spellcheck="false" placeholder="Buscar pedido">
+                <input type="text" class="form-control" id="barraBuscar" maxlength="30" spellcheck="false" placeholder="Buscar pedido">
             </div>
             <div class="col-md-4 mb-4">
                 <button type="button" class="btn btn-primary" id="btnRead" onclick="buscarPedido()">Buscar</button>
             </div>
-
-            <hr>
 
             <div class="col-md-6">
               <label for="dataPedido" class="form-label">Data do Pedido:</label>
@@ -57,7 +56,7 @@
 
             <div class="col-md-6">
               <label for="referencia" class="form-label">CPF:</label>
-              <input type="text" class="form-control" id="referencia">
+              <input type="text" class="form-control" id="cpf">
             </div>
 
             <div class="col-md-6">
@@ -72,7 +71,7 @@
 
             <div class="col-12">
               <label for="especificacoes" class="form-label">Preferências:</label>
-              <textarea class="form-control" id="especificacoes" rows="3" placeholder="Tamanho, pontos, acabamento, acessórios, cores..."></textarea>
+              <textarea class="form-control" id="preferencia" rows="3" placeholder="Tamanho, pontos, acabamento, acessórios, cores..."></textarea>
             </div>
 
             <div class="col-md-6">
@@ -86,10 +85,10 @@
             </div>
 
             <div class="col-md-6 d-flex justify-content-left mt-4">
-                <button type="submit" class="btn btn-success fw-bold">Cadastrar</button>
-                <button type="submit" class="btn btn-warning fw-bold ml-2">Editar</button>
-                <button type="reset" class="btn btn-danger fw-bold ml-2">Limpar</button>
-                <button type="button" class="btn btn-info fw-bold ml-2">Excluir</button>
+                <button id="btnCreate" type="submit" class="btn btn-success fw-bold">Cadastrar</button>
+                <button id="btnUpdate" type="submit" class="btn btn-warning fw-bold ml-2">Editar</button>
+                <button id="btnReset" type="reset" class="btn btn-danger fw-bold ml-2">Limpar</button>
+                <button id="btnDelete" type="button" class="btn btn-info fw-bold ml-2">Excluir</button>
             </div>
 
             <div class="col-md-6">
@@ -101,6 +100,10 @@
       </div>
     </div>
   </div>
+  <footer class="bg-light text-dark"> <!---#343A40-->
+    <p id="dataAtual"></p>
+    <img id="icondb" src="../public/img/dboff.png" alt="icone banco de dados">
+  </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

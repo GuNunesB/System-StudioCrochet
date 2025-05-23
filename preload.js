@@ -4,5 +4,6 @@ ipcRenderer.send('db-connect')
 
 contextBridge.exposeInMainWorld('api', {
     dbStatus: (message) => ipcRenderer.on('db-status', message),
-    aboutExit: () => ipcRenderer.send('about-exit')
+    aboutExit: () => ipcRenderer.send('about-exit'),
+    addPedido: (newPedido) => ipcRenderer.send('create-pedido', newPedido)
 })

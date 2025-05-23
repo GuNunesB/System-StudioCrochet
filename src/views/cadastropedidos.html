@@ -56,7 +56,8 @@
 
             <div class="col-md-6">
               <label for="referencia" class="form-label">CPF:</label>
-              <input type="text" class="form-control" id="cpf">
+              <input type="text" class="form-control" id="cpf" onblur="validarCPF()">
+              <p id="cpfErro" class="text-danger small mt-1"></p>
             </div>
 
             <div class="col-md-6">
@@ -87,8 +88,8 @@
             <div class="col-md-6 d-flex justify-content-left mt-4">
                 <button id="btnCreate" type="submit" class="btn btn-success fw-bold">Cadastrar</button>
                 <button id="btnUpdate" type="submit" class="btn btn-warning fw-bold ml-2">Editar</button>
-                <button id="btnReset" type="reset" class="btn btn-danger fw-bold ml-2">Limpar</button>
-                <button id="btnDelete" type="button" class="btn btn-info fw-bold ml-2">Excluir</button>
+                <button id="btnDelete" type="button" class="btn btn-danger fw-bold ml-2">Excluir</button>
+                <button id="btnReset" type="reset" class="btn btn-info fw-bold ml-2">Limpar</button>
             </div>
 
             <div class="col-md-6">

@@ -158,3 +158,56 @@ const templete = [
     ]
   }
 ]
+
+// CRUD CREATE ===================================================================================
+ipcMain.on('create-cliente', async (event, newPedido) => {
+  console.log(newPedido)
+
+  try {
+    const newPedidos = clienteModel({
+      nomeCliente: newCliente.nomeCli,
+      telCliente: newCliente.telCli,
+      email: newCliente.emailCli,
+      senha: newCliente.senhaCli,
+      cep: newCliente.cepCli,
+      cidade: newCliente.cidadeCli,
+      uf: newCliente.ufCli,
+      logradouro: newCliente.logradouroCli,
+      bairro: newCliente.bairroCli,
+      cpf: newCliente.cpfCli,
+      complemento: newCliente.complementoCli,
+    })
+
+    await newPedidos.save()
+
+    dialog.showMessageBox({
+      type: 'info',
+      title: "Aviso",
+      message: "Cliente adicionado com sucesso.",
+      buttons: ['OK']
+    }).then((result) => {
+      if (result.response === 0) {
+        event.reply('reset-form')
+      }
+    })
+
+  } catch (error) {
+    if(error.code === 11000) {
+      dialog.showMessageBox({
+        type: 'error',
+        title: "Atenção!",
+        message: "CPF já cadastrado. \nVerifique o número digitado.",
+        buttons: ['OK']
+
+      }).then((result) => {
+        if(result.response === 0) {
+          event.reply('reset-cpf')
+        }
+
+      })
+    } else {
+      console.log(error)
+    }
+  }
+})
+// FIM CRUD CREATE ===============================================================================

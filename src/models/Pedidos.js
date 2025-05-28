@@ -8,9 +8,7 @@ const pedidoSchema = new Schema({
         type: String
     },
     cpfCliente: {
-        type: String,
-        unique: true,
-        index: true
+        type: String
     },
     telCliente: {
         type: String,

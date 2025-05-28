@@ -34,17 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let form = document.getElementById('form')
 let dataPedido = document.getElementById('dataPedido')
-let tel = document.getElementById('cliente')
-let email = document.getElementById('telefone')
-let senha = document.getElementById('endereco')
-let cep = document.getElementById('produto')
-let cidade = document.getElementById('cpf')
-let uf = document.getElementById('fio')
-let logradouro = document.getElementById('referencia')
-let bairro = document.getElementById('preferencia')
-let cpf = document.getElementById('quantidade')
-let complemento = document.getElementById('prazo')
-let idClient = document.getElementById('inputIdClient')
+let nome = document.getElementById('cliente')
+let tel = document.getElementById('telefone')
+let endereco = document.getElementById('endereco')
+let produto = document.getElementById('produto')
+let cpf = document.getElementById('cpf')
+let fio = document.getElementById('fio')
+let refs = document.getElementById('referencia')
+let prefs = document.getElementById('preferencia')
+let qtde = document.getElementById('quantidade')
+let prazo = document.getElementById('prazo')
+let valor = document.getElementById('valorTotal')
+let idPedido = document.getElementById('inputIdPedido')
 
 function validarCPF() {
     let cpfInput = document.getElementById('cpf');
@@ -88,60 +89,62 @@ function validarCPF() {
 function teclaEnter(event) {
     if (event.key === "Enter") {
         event.preventDefault()
-        searchName()
+        searchPed()
     }
 }
 
-    formCli.addEventListener('keydown', teclaEnter)
+    form.addEventListener('keydown', teclaEnter)
 
 function restaurarEnter() {
-    formCli.removeEventListener('keydown', teclaEnter)
+    form.removeEventListener('keydown', teclaEnter)
 }
 
-formCli.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault()
 
-    if (idClient.value === "") {
-        const newCliente = {
+    if (idPedido.value === "") {
+        const newPedido = {
             nomeCli: nome.value,
-            telCli: tel.value,
-            emailCli: email.value,
-            senhaCli: senha.value,
-            cepCli: cep.value,
-            cidadeCli: cidade.value,
-            ufCli: uf.value,
-            logradouroCli: logradouro.value,
-            bairroCli: bairro.value,
+            enderecoCli: endereco.value,
             cpfCli: cpf.value,
-            complementoCli: complemento.value
+            telCli: tel.value,
+            dataPed: dataPedido.value,
+            produto: produto.value,
+            fio: fio.value,
+            refs: refs.value,
+            prefs: prefs.value,
+            prazo: prazo.value,
+            qtde: qtde.value,
+            valor: valor.value
         }
 
-        api.addCliente(newCliente)
+        api.addPedido(newPedido)
     } else {
-        const cliente = {
-            idCli: idClient.value,
+        console.log("Foi Renderer1")
+        const pedido = {
+            idPedido: idPedido.value,
             nomeCli: nome.value,
-            telCli: tel.value,
-            emailCli: email.value,
-            senhaCli: senha.value,
-            cepCli: cep.value,
-            cidadeCli: cidade.value,
-            ufCli: uf.value,
-            logradouroCli: logradouro.value,
-            bairroCli: bairro.value,
+            enderecoCli: endereco.value,
             cpfCli: cpf.value,
-            complementoCli: complemento.value
+            telCli: tel.value,
+            dataPed: dataPedido.value,
+            produto: produto.value,
+            fio: fio.value,
+            refs: refs.value,
+            prefs: prefs.value,
+            prazo: prazo.value,
+            qtde: qtde.value,
+            valor: valor.value
         }
-        
-        api.updateClient(cliente)
+        console.log("Foi Renderer2")
+        api.updatePedido(pedido)
+        console.log("Foi Renderer3")
     }    
 })
 
-//++ Decifrar Pt.2 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function resetForm() {
     location.reload()
 }
-
 
 api.resetForm((args) => {
     resetForm()
@@ -161,7 +164,7 @@ api.resetCpf((args) => {
 })
 
 api.setName((args) => {
-    let busca = document.getElementById('searchClient').value
+    let busca = document.getElementById('barraBuscar').value
 
     foco.value=""
 
@@ -172,7 +175,7 @@ api.setName((args) => {
 })
 
 api.setCpf((args) => {
-    let busca = document.getElementById('searchClient').value
+    let busca = document.getElementById('barraBuscar').value
  
     foco.value=""
 
@@ -182,8 +185,9 @@ api.setCpf((args) => {
     restaurarEnter()
 })
 
-function searchName() {
-    let searchValue = document.getElementById('searchClient').value
+function buscarPedido() {
+    console.log()
+    let searchValue = document.getElementById('barraBuscar').value
     if (searchValue === "") {
         api.validateSearch()
 
@@ -194,26 +198,27 @@ function searchName() {
         if (isCPF) {
             api.searchCpf(searchValue)
         } else {
-            api.searchName(searchValue)
+            api.buscarPedido(searchValue)
         }
-        api.renderClient((event, client) => {
-            const clientData = JSON.parse(client)
+        api.renderPedido((event, pedid) => {
+            const pedidoData = JSON.parse(pedid)
 
-            arrayClient = clientData
+            arrayPedid = pedidoData
 
-            arrayClient.forEach((c) => {
-                nome.value = c.nomeCliente
-                cpf.value = c.cpf
-                email.value = c.email
-                tel.value = c.telCliente
-                cep.value = c.cep
-                logradouro.value = c.logradouro
-                senha.value = c.senha
-                complemento.value = c.complemento
-                bairro.value = c.bairro
-                cidade.value = c.cidade
-                uf.value = c.uf
-                idClient.value = c._id
+            arrayPedid.forEach((p) => {
+                nome.value = p.nomeCliente
+                endereco.value = p.enderecoCliente
+                cpf.value = p.cpfCliente
+                tel.value = p.telCliente
+                dataPedido.value = p.dataPedido
+                produto.value = p.produto
+                fio.value = p.fio
+                refs.value = p.referencias
+                prefs.value = p.preferencias
+                prazo.value = p.prazo
+                qtde.value = p.qtde
+                valor.value = p.valor
+                idPedido.value = p._id
 
                 restaurarEnter()
                 btnUpdate.disabled = false
@@ -223,8 +228,8 @@ function searchName() {
     }
 }
 
-function removeClient() {
-    api.deleteClient(idClient.value)
+function removePedido() {
+    api.deletePedido(idPedido.value)
 }
 
 function fechar() {

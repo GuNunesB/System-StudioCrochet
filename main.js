@@ -160,22 +160,23 @@ const templete = [
 ]
 
 // CRUD CREATE ===================================================================================
-ipcMain.on('create-cliente', async (event, newPedido) => {
+ipcMain.on('create-pedido', async (event, newPedido) => {
   console.log(newPedido)
 
   try {
-    const newPedidos = clienteModel({
-      nomeCliente: newCliente.nomeCli,
-      telCliente: newCliente.telCli,
-      email: newCliente.emailCli,
-      senha: newCliente.senhaCli,
-      cep: newCliente.cepCli,
-      cidade: newCliente.cidadeCli,
-      uf: newCliente.ufCli,
-      logradouro: newCliente.logradouroCli,
-      bairro: newCliente.bairroCli,
-      cpf: newCliente.cpfCli,
-      complemento: newCliente.complementoCli,
+    const newPedidos = pedidoModel({
+      nomeCliente: newPedido.nomeCli,
+      enderecoCliente: newPedido.enderecoCli,
+      cpfCliente: newPedido.cpfCli,
+      telCliente: newPedido.telCli,
+      dataPedido: newPedido.dataPed,
+      produto: newPedido.produto,
+      fio: newPedido.fio,
+      referencias: newPedido.refs,
+      preferencias: newPedido.prefs,
+      prazo: newPedido.prazo,
+      qtde: newPedido.qtde,
+      valor: newPedido.valor
     })
 
     await newPedidos.save()
@@ -183,7 +184,7 @@ ipcMain.on('create-cliente', async (event, newPedido) => {
     dialog.showMessageBox({
       type: 'info',
       title: "Aviso",
-      message: "Cliente adicionado com sucesso.",
+      message: "Pedido feito com sucesso.",
       buttons: ['OK']
     }).then((result) => {
       if (result.response === 0) {
@@ -192,22 +193,160 @@ ipcMain.on('create-cliente', async (event, newPedido) => {
     })
 
   } catch (error) {
-    if(error.code === 11000) {
-      dialog.showMessageBox({
-        type: 'error',
-        title: "Atenção!",
-        message: "CPF já cadastrado. \nVerifique o número digitado.",
-        buttons: ['OK']
-
-      }).then((result) => {
-        if(result.response === 0) {
-          event.reply('reset-cpf')
-        }
-
-      })
-    } else {
-      console.log(error)
-    }
+    dialog.showMessageBox({
+      type: 'error',
+      title: "Atenção!",
+      message: "Há algum erro. \nVerifique as informações digitadas.",
+      buttons: ['OK']
+    })
+    
+    console.log(error)
   }
 })
 // FIM CRUD CREATE ===============================================================================
+
+// CRUD READ =====================================================================================
+ipcMain.on('validate-search', () => {
+  dialog.showMessageBox({
+      type: 'warning',
+      title: 'Atenção',
+      message: 'Preencha o campo de busca',
+      buttons: ['OK']
+  })
+})
+
+ipcMain.on('search-name', async (event, pedName) => {
+  try {
+      const pedid = await pedidoModel.find({
+        nomeCliente: new RegExp(pedName, 'i')
+      })
+
+      console.log(pedid)
+
+      if (pedid.length === 0) {
+        dialog.showMessageBox({
+          type: 'warning',
+          title: 'Aviso',
+          message: 'Pedido não encontrado.\nDeseja cadastrar esse pedido?',
+          defaultId: 0,
+          buttons: ['Sim', 'Não']
+        }).then((result) => {
+         if (result.response === 0) {
+          event.reply('set-name')
+          
+         } else {
+          event.reply('reset-form')
+
+         }
+        })
+      } else {
+        event.reply('render-pedid', JSON.stringify(pedid))
+      }
+      
+  } catch (error) {
+      console.log(error)
+  }
+})
+
+ipcMain.on('search-cpf', async (event, cliCpf) => {
+  try {
+      const pedid = await pedidoModel.find({
+        cpf: new RegExp(padCpf, 'i')
+      })
+
+      console.log(pedid)
+
+      if (pedid.length === 0) {
+        dialog.showMessageBox({
+          type: 'warning',
+          title: 'Aviso',
+          message: 'Pedido não encontrado.\nDeseja cadastrar esse pedido?',
+          defaultId: 0,
+          buttons: ['Sim', 'Não']
+        }).then((result) => {
+         if (result.response === 0) {
+          event.reply('set-cpf')
+          
+         } else {
+          event.reply('reset-form')
+
+         }
+        })
+      } else {
+        event.reply('render-pedid', JSON.stringify(pedid))
+
+      }
+      
+  } catch (error) {
+      console.log(error)
+  }
+})
+// FIM CRUD READ =================================================================================
+
+// CRUD DELETE ===================================================================================
+ipcMain.on('delete-pedido', async (event, id) => {
+  const result = await dialog.showMessageBox(win, {
+      type: 'warning',
+      title: "Atenção!",
+      message: "Tem certeza que deseja excluir este pedido?\nEsta ação não poderá ser desfeita.",
+      buttons: ['Cancelar', 'Excluir']
+  })
+  if (result.response === 1) {
+      try {
+          const delPedido = await pedidoModel.findByIdAndDelete(id)
+          event.reply('reset-form')
+      } catch (error) {
+          console.log(error)
+      }
+  }
+})
+// FIM CRUD DELETE ===============================================================================
+
+// CRUD UPDATE ===================================================================================
+ipcMain.on('update-pedido', async (event, pedido) => {
+  try { 
+    console.log("Foi main1")
+      const updatePedido = await pedidoModel.findByIdAndUpdate(
+        pedido.idPedido,
+          {
+            nomeCliente: pedido.nomeCli,
+            enderecoCliente: pedido.enderecoCli,
+            cpfCliente: pedido.cpfCli,
+            telCliente: pedido.telCli,
+            dataPedido: pedido.dataPed,
+            produto: pedido.produto,
+            fio: pedido.fio,
+            referencias: pedido.refs,
+            preferencias: pedido.prefs,
+            prazo: pedido.prazo,
+            qtde: pedido.qtde,
+            valor: pedido.valor
+          },
+          {
+              new: true
+          }
+      )        
+      console.log("Foi main2")
+
+      dialog.showMessageBox({
+          type: 'info',
+          title: "Aviso",
+          message: "Dados do pedido alterados com sucesso",
+          buttons: ['OK']
+      }).then((result) => {
+          if (result.response === 0) {
+              event.reply('reset-form')
+          }
+      })
+  } catch (error) {
+    dialog.showMessageBox({
+      type: 'error',
+      title: "Atenção!",
+      message: "Há algum erro.\nVerifique as informações digitadas.",
+      buttons: ['OK']
+    })
+    console.log(error)
+  }
+  console.log("Foi main3")
+})
+// FIM CRUD UPDATE ===============================================================================

@@ -248,33 +248,39 @@ ipcMain.on('search-name', async (event, pedName) => {
   }
 })
 
-ipcMain.on('search-cpf', async (event, cliCpf) => {
+ipcMain.on('search-cpf', async (event, pedCpf) => {
   try {
+    console.log("foi1")
       const pedid = await pedidoModel.find({
-        cpf: new RegExp(padCpf, 'i')
+        cpfCliente: new RegExp(pedCpf, 'i')
       })
 
+      console.log("foi2")
       console.log(pedid)
+      console.log("foi3")
 
       if (pedid.length === 0) {
         dialog.showMessageBox({
           type: 'warning',
           title: 'Aviso',
-          message: 'Pedido não encontrado.\nDeseja cadastrar esse pedido?',
+          message: 'Pedido não encontrado.\nDeseja cadastrar esse pedido no nome deste cliente?',
           defaultId: 0,
           buttons: ['Sim', 'Não']
         }).then((result) => {
          if (result.response === 0) {
+          console.log("foi10")
           event.reply('set-cpf')
-          
+          console.log("foi4")
          } else {
+          console.log("foi11")
           event.reply('reset-form')
 
          }
         })
       } else {
+        console.log("foi6")
         event.reply('render-pedid', JSON.stringify(pedid))
-
+        console.log("foi5")
       }
       
   } catch (error) {
@@ -331,7 +337,7 @@ ipcMain.on('update-pedido', async (event, pedido) => {
       dialog.showMessageBox({
           type: 'info',
           title: "Aviso",
-          message: "Dados do pedido alterados com sucesso",
+          message: "Dados alterados com sucesso",
           buttons: ['OK']
       }).then((result) => {
           if (result.response === 0) {
@@ -350,3 +356,91 @@ ipcMain.on('update-pedido', async (event, pedido) => {
   console.log("Foi main3")
 })
 // FIM CRUD UPDATE ===============================================================================
+
+// Relatórios PDFs ==================================================================================
+async function relatorioClientes() {
+  try {
+      // ================================================
+      //          Configuração do documento pdf
+      // ================================================
+
+      // p (portrait)  l (landscape)
+      // a4 (210 mm x 297 mm)
+      const doc = new jsPDF('p', 'mm', 'a4')
+
+      // inserir data atual no documento
+      const dataAtual = new Date().toLocaleDateString('pt-BR')
+      // doc.setFontSize() tamanho da fonte em ponto(= word)
+      doc.setFontSize(10)
+      // doc.text() escreve um texto no documento
+      doc.text(`Data: ${dataAtual}`, 170, 15) //( x,y (mm))
+      doc.setFontSize(18)
+      doc.text("Relatório de clientes", 15, 30)
+      doc.setFontSize(12)
+      let y = 50 //variável de apoio
+      // cabeçalho da tabela
+      doc.text("Nome", 14, y)
+      doc.text("Telefone", 85, y)
+      doc.text("E-mail", 130, y)
+      y += 5
+      // desenhar uma linha
+      doc.setLineWidth(0.5)
+      doc.line(10, y, 200, y) // (10 (inicio)_________ 200 (fim))
+      y += 10
+
+      // ================================================
+      //  Obter a listagem de clientes(ordem alfabética)
+      // ================================================
+
+      const clientes = await clientModel.find().sort({ nomeCliente: 1 })
+      // teste de recimento (Importante!)
+      // console.log(clientes)
+      // popular o documento pdf com os clientes cadastrados
+      clientes.forEach((c) => {
+          // criar uma nova página se y > 280mm (A4 = 297mm)
+          if (y > 280) {
+              doc.addPage()
+              y = 20 //margem de 20mm para iniciar nova folha
+              // cabeçalho da tabela
+              doc.text("Nome", 14, y)
+              doc.text("Telefone", 85, y)
+              doc.text("E-mail", 130, y)
+              y += 5
+              // desenhar uma linha
+              doc.setLineWidth(0.5)
+              doc.line(10, y, 200, y) // (10 (inicio)_________ 200 (fim))
+              y += 10
+          }
+          doc.text(c.nomeCliente, 15, y)
+          doc.text(c.foneCliente, 85, y)
+          doc.text(c.emailCliente, 130, y)
+          y += 10
+      })
+
+      // ================================================
+      //         Numeração automática de páginas
+      // ================================================
+
+      const pages = doc.internal.getNumberOfPages()
+      for (let i = 1; i <= pages; i++) {
+          doc.setPage(i)
+          doc.setFontSize(10)
+          doc.text(`Página ${i} de ${pages}`, 105, 290, { align: 'center' })
+      }
+
+      // ================================================
+      //    Abrir o arquivo pdf no sistema operacional
+      // ================================================
+
+      // Definir o caminho do arquivo temporário e nome do arquivo com extensão .pdf (importante!)
+      const tempDir = app.getPath('temp')
+      const filePath = path.join(tempDir, 'clientes.pdf')
+      // salvar temporariamente o arquivo
+      doc.save(filePath)
+      // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+      shell.openPath(filePath)
+  } catch (error) {
+      console.log(error)
+  }
+}
+// Fim Relatórios PDFs ==============================================================================

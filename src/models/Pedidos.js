@@ -37,6 +37,9 @@ const pedidoSchema = new Schema({
     },
     valor: {
         type: String
+    },
+    status: {
+        type: String
     }
 }, {versionKey: false})
 

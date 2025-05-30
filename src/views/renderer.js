@@ -85,11 +85,10 @@ function validarCPF() {
     return true;
 }
 
-//++ Decifrar +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function teclaEnter(event) {
     if (event.key === "Enter") {
         event.preventDefault()
-        searchPed()
+        buscarPedido()
     }
 }
 
@@ -186,21 +185,25 @@ api.setCpf((args) => {
 })
 
 function buscarPedido() {
-    console.log()
     let searchValue = document.getElementById('barraBuscar').value
     if (searchValue === "") {
         api.validateSearch()
-
+        console.log("É um número3")
     } else {
 
         const isCPF = !isNaN(searchValue)
+        console.log(isCPF)
+        console.log("Executa")
 
         if (isCPF) {
+            console.log(isCPF)
+            console.log("É um número2")
             api.searchCpf(searchValue)
         } else {
             api.buscarPedido(searchValue)
         }
         api.renderPedido((event, pedid) => {
+            console.log("Executa")
             const pedidoData = JSON.parse(pedid)
 
             arrayPedid = pedidoData

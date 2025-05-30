@@ -6,6 +6,8 @@ const { conectar, desconectar } = require('./database.js')
 
 const pedidoModel = require('./src/models/Pedidos.js')
 
+const { jspdf, default: jsPDF } = require('jspdf')
+
 let win
 const createWindow = () => {
   nativeTheme.themeSource = 'light'
@@ -107,8 +109,8 @@ const templete = [
     label: 'Relatórios PDFs',
     submenu: [
       {
-        label: 'Produtos',
-        click: () => relatorioProdutos()
+        label: 'Pedidos',
+        click: () => relatorioPedidos()
       }
     ]
   },
@@ -358,69 +360,70 @@ ipcMain.on('update-pedido', async (event, pedido) => {
 // FIM CRUD UPDATE ===============================================================================
 
 // Relatórios PDFs ==================================================================================
-async function relatorioClientes() {
+async function relatorioPedidos() {
   try {
-      // ================================================
-      //          Configuração do documento pdf
-      // ================================================
-
-      // p (portrait)  l (landscape)
-      // a4 (210 mm x 297 mm)
       const doc = new jsPDF('p', 'mm', 'a4')
 
       // inserir data atual no documento
       const dataAtual = new Date().toLocaleDateString('pt-BR')
-      // doc.setFontSize() tamanho da fonte em ponto(= word)
+      
       doc.setFontSize(10)
-      // doc.text() escreve um texto no documento
-      doc.text(`Data: ${dataAtual}`, 170, 15) //( x,y (mm))
+
+      doc.text(`Data: ${dataAtual}`, 170, 15)
       doc.setFontSize(18)
-      doc.text("Relatório de clientes", 15, 30)
-      doc.setFontSize(12)
-      let y = 50 //variável de apoio
-      // cabeçalho da tabela
-      doc.text("Nome", 14, y)
-      doc.text("Telefone", 85, y)
-      doc.text("E-mail", 130, y)
+      doc.text("Relatório de Pedidos", 15, 30)
+      
+      doc.setFontSize(11)
+      let y = 50 
+
+      doc.text("Cliente", 17, y)
+      doc.text("Telefone", 58, y)
+      doc.text("Produto", 86, y)
+      doc.text("Prazo", 145, y)
+      doc.text("Qtde", 165, y)
+      doc.text("Valor", 184, y)
+      
       y += 5
-      // desenhar uma linha
+
       doc.setLineWidth(0.5)
-      doc.line(10, y, 200, y) // (10 (inicio)_________ 200 (fim))
+      doc.line(10, y, 200, y)
       y += 10
-
-      // ================================================
-      //  Obter a listagem de clientes(ordem alfabética)
-      // ================================================
-
-      const clientes = await clientModel.find().sort({ nomeCliente: 1 })
-      // teste de recimento (Importante!)
-      // console.log(clientes)
-      // popular o documento pdf com os clientes cadastrados
-      clientes.forEach((c) => {
-          // criar uma nova página se y > 280mm (A4 = 297mm)
+      
+      const pedidos = await pedidoModel.find().sort({ nomeCliente: 1 })
+      
+      pedidos.forEach((p) => {
+        console.log("Teste1")
           if (y > 280) {
+            console.log("Teste2")
               doc.addPage()
-              y = 20 //margem de 20mm para iniciar nova folha
-              // cabeçalho da tabela
-              doc.text("Nome", 14, y)
-              doc.text("Telefone", 85, y)
-              doc.text("E-mail", 130, y)
+
+              y = 20
+
+              doc.text("Cliente", 17, y)
+              doc.text("Telefone", 58, y)
+              doc.text("Produto", 86, y)
+              doc.text("Prazo", 145, y)
+              doc.text("Quantidade", 165, y)
+              doc.text("Valor", 184, y)
+
               y += 5
-              // desenhar uma linha
+
               doc.setLineWidth(0.5)
-              doc.line(10, y, 200, y) // (10 (inicio)_________ 200 (fim))
+              doc.line(10, y, 200, y)
               y += 10
+              console.log("Teste2")
           }
-          doc.text(c.nomeCliente, 15, y)
-          doc.text(c.foneCliente, 85, y)
-          doc.text(c.emailCliente, 130, y)
+          console.log("Teste3")
+          doc.text(p.nomeCliente, 17, y)
+          doc.text(p.telCliente, 58, y)
+          doc.text(p.produto, 86, y)
+          doc.text("Bug", 145, y)
+          doc.text(p.qtde, 168, y)
+          doc.text(p.valor, 184, y)
+          console.log("Teste4")
           y += 10
       })
-
-      // ================================================
-      //         Numeração automática de páginas
-      // ================================================
-
+      console.log("Teste5")
       const pages = doc.internal.getNumberOfPages()
       for (let i = 1; i <= pages; i++) {
           doc.setPage(i)
@@ -428,16 +431,11 @@ async function relatorioClientes() {
           doc.text(`Página ${i} de ${pages}`, 105, 290, { align: 'center' })
       }
 
-      // ================================================
-      //    Abrir o arquivo pdf no sistema operacional
-      // ================================================
-
-      // Definir o caminho do arquivo temporário e nome do arquivo com extensão .pdf (importante!)
       const tempDir = app.getPath('temp')
-      const filePath = path.join(tempDir, 'clientes.pdf')
-      // salvar temporariamente o arquivo
+      const filePath = path.join(tempDir, 'pedidos.pdf')
+    
       doc.save(filePath)
-      // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+
       shell.openPath(filePath)
   } catch (error) {
       console.log(error)

@@ -12,8 +12,8 @@ let win
 const createWindow = () => {
   nativeTheme.themeSource = 'light'
   win = new BrowserWindow({
-    width: 1200,
-    height: 1000,
+    width: 1300,
+    height: 1100,
 
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -377,9 +377,8 @@ async function relatorioPedidos() {
       let y = 50 
 
       doc.text("Cliente", 17, y)
-      doc.text("Telefone", 58, y)
-      doc.text("Produto", 86, y)
-      doc.text("Prazo", 145, y)
+      doc.text("Telefone", 62, y)
+      doc.text("Produto", 94, y)
       doc.text("Qtde", 165, y)
       doc.text("Valor", 184, y)
       
@@ -400,9 +399,8 @@ async function relatorioPedidos() {
               y = 20
 
               doc.text("Cliente", 17, y)
-              doc.text("Telefone", 58, y)
-              doc.text("Produto", 86, y)
-              doc.text("Prazo", 145, y)
+              doc.text("Telefone", 62, y)
+              doc.text("Produto", 94, y)
               doc.text("Quantidade", 165, y)
               doc.text("Valor", 184, y)
 
@@ -413,11 +411,10 @@ async function relatorioPedidos() {
               y += 10
               console.log("Teste2")
           }
-          console.log("Teste3")
+
           doc.text(p.nomeCliente, 17, y)
-          doc.text(p.telCliente, 58, y)
-          doc.text(p.produto, 86, y)
-          doc.text("Bug", 145, y)
+          doc.text(p.telCliente, 62, y)
+          doc.text(p.produto, 94, y)
           doc.text(p.qtde, 168, y)
           doc.text(p.valor, 184, y)
           console.log("Teste4")

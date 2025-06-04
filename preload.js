@@ -15,5 +15,7 @@ contextBridge.exposeInMainWorld('api', {
     setName: (args) => ipcRenderer.on('set-name', args),
     setCpf: (args) => ipcRenderer.on('set-cpf', args),
     deletePedido: (id) => ipcRenderer.send('delete-pedido', id),
-    updatePedido: (pedido) => ipcRenderer.send('update-pedido', pedido)
+    updatePedido: (pedido) => ipcRenderer.send('update-pedido', pedido),
+    listarCards: () => ipcRenderer.send('listar-cards'),
+    renderCards: (cards) => ipcRenderer.on('render-cards', cards)
 })

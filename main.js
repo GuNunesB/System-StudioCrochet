@@ -439,3 +439,18 @@ async function relatorioPedidos() {
   }
 }
 // Fim Relatórios PDFs ==============================================================================
+
+// Criação dos cards no pedidos.html ================================================================
+
+ipcMain.on('listar-cards', async (event) => {
+  console.log("main1")
+  try {
+    console.log("main2")
+    const cards = await pedidoModel.find()
+    event.reply('render-cards', JSON.stringify(cards))
+  } catch (error) {
+    console.log("main errrorrrr")
+    console.log(error)
+  }
+  console.log("main3")
+})

@@ -1,5 +1,3 @@
-console.log("Processo de renderização")
-
 function obterData() {
     const data = new Date()
     const options = {
@@ -119,7 +117,6 @@ form.addEventListener('submit', async (event) => {
 
         api.addPedido(newPedido)
     } else {
-        console.log("Foi Renderer1")
         const pedido = {
             idPedido: idPedido.value,
             nomeCli: nome.value,
@@ -135,9 +132,8 @@ form.addEventListener('submit', async (event) => {
             qtde: qtde.value,
             valor: valor.value
         }
-        console.log("Foi Renderer2")
+
         api.updatePedido(pedido)
-        console.log("Foi Renderer3")
     }    
 })
 
@@ -188,22 +184,16 @@ function buscarPedido() {
     let searchValue = document.getElementById('barraBuscar').value
     if (searchValue === "") {
         api.validateSearch()
-        console.log("É um número3")
     } else {
 
         const isCPF = !isNaN(searchValue)
-        console.log(isCPF)
-        console.log("Executa")
 
         if (isCPF) {
-            console.log(isCPF)
-            console.log("É um número2")
             api.searchCpf(searchValue)
         } else {
             api.buscarPedido(searchValue)
         }
         api.renderPedido((event, pedid) => {
-            console.log("Executa")
             const pedidoData = JSON.parse(pedid)
 
             arrayPedid = pedidoData
@@ -238,7 +228,6 @@ function fechar() {
     api.aboutExit()
 }
 
-//==============================================================================
 window.addEventListener('DOMContentLoaded', () => {
     const dadosSalvos = localStorage.getItem('pedidoSelecionado')
     if (dadosSalvos) {

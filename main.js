@@ -161,9 +161,7 @@ const templete = [
   }
 ]
 
-// CRUD CREATE ===================================================================================
 ipcMain.on('create-pedido', async (event, newPedido) => {
-  console.log(newPedido)
 
   try {
     const newPedidos = pedidoModel({
@@ -205,9 +203,7 @@ ipcMain.on('create-pedido', async (event, newPedido) => {
     console.log(error)
   }
 })
-// FIM CRUD CREATE ===============================================================================
 
-// CRUD READ =====================================================================================
 ipcMain.on('validate-search', () => {
   dialog.showMessageBox({
       type: 'warning',
@@ -222,8 +218,6 @@ ipcMain.on('search-name', async (event, pedName) => {
       const pedid = await pedidoModel.find({
         nomeCliente: new RegExp(pedName, 'i')
       })
-
-      console.log(pedid)
 
       if (pedid.length === 0) {
         dialog.showMessageBox({
@@ -252,14 +246,9 @@ ipcMain.on('search-name', async (event, pedName) => {
 
 ipcMain.on('search-cpf', async (event, pedCpf) => {
   try {
-    console.log("foi1")
       const pedid = await pedidoModel.find({
         cpfCliente: new RegExp(pedCpf, 'i')
       })
-
-      console.log("foi2")
-      console.log(pedid)
-      console.log("foi3")
 
       if (pedid.length === 0) {
         dialog.showMessageBox({
@@ -270,28 +259,21 @@ ipcMain.on('search-cpf', async (event, pedCpf) => {
           buttons: ['Sim', 'Não']
         }).then((result) => {
          if (result.response === 0) {
-          console.log("foi10")
           event.reply('set-cpf')
-          console.log("foi4")
          } else {
-          console.log("foi11")
           event.reply('reset-form')
 
          }
         })
       } else {
-        console.log("foi6")
         event.reply('render-pedid', JSON.stringify(pedid))
-        console.log("foi5")
       }
       
   } catch (error) {
       console.log(error)
   }
 })
-// FIM CRUD READ =================================================================================
 
-// CRUD DELETE ===================================================================================
 ipcMain.on('delete-pedido', async (event, id) => {
   const result = await dialog.showMessageBox(win, {
       type: 'warning',
@@ -308,12 +290,9 @@ ipcMain.on('delete-pedido', async (event, id) => {
       }
   }
 })
-// FIM CRUD DELETE ===============================================================================
 
-// CRUD UPDATE ===================================================================================
 ipcMain.on('update-pedido', async (event, pedido) => {
   try { 
-    console.log("Foi main1")
       const updatePedido = await pedidoModel.findByIdAndUpdate(
         pedido.idPedido,
           {
@@ -333,8 +312,7 @@ ipcMain.on('update-pedido', async (event, pedido) => {
           {
               new: true
           }
-      )        
-      console.log("Foi main2")
+      )
 
       dialog.showMessageBox({
           type: 'info',
@@ -355,16 +333,12 @@ ipcMain.on('update-pedido', async (event, pedido) => {
     })
     console.log(error)
   }
-  console.log("Foi main3")
 })
-// FIM CRUD UPDATE ===============================================================================
 
-// Relatórios PDFs ==================================================================================
 async function relatorioPedidos() {
   try {
       const doc = new jsPDF('p', 'mm', 'a4')
 
-      // inserir data atual no documento
       const dataAtual = new Date().toLocaleDateString('pt-BR')
       
       doc.setFontSize(10)
@@ -391,9 +365,7 @@ async function relatorioPedidos() {
       const pedidos = await pedidoModel.find().sort({ nomeCliente: 1 })
       
       pedidos.forEach((p) => {
-        console.log("Teste1")
           if (y > 280) {
-            console.log("Teste2")
               doc.addPage()
 
               y = 20
@@ -409,7 +381,6 @@ async function relatorioPedidos() {
               doc.setLineWidth(0.5)
               doc.line(10, y, 200, y)
               y += 10
-              console.log("Teste2")
           }
 
           doc.text(p.nomeCliente, 17, y)
@@ -417,10 +388,9 @@ async function relatorioPedidos() {
           doc.text(p.produto, 94, y)
           doc.text(p.qtde, 168, y)
           doc.text(p.valor, 184, y)
-          console.log("Teste4")
+
           y += 10
       })
-      console.log("Teste5")
       const pages = doc.internal.getNumberOfPages()
       for (let i = 1; i <= pages; i++) {
           doc.setPage(i)
@@ -438,19 +408,12 @@ async function relatorioPedidos() {
       console.log(error)
   }
 }
-// Fim Relatórios PDFs ==============================================================================
-
-// Criação dos cards no pedidos.html ================================================================
 
 ipcMain.on('listar-cards', async (event) => {
-  console.log("main1")
   try {
-    console.log("main2")
     const cards = await pedidoModel.find()
     event.reply('render-cards', JSON.stringify(cards))
   } catch (error) {
-    console.log("main errrorrrr")
     console.log(error)
   }
-  console.log("main3")
 })

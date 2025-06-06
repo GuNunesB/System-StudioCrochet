@@ -32,38 +32,3 @@ api.renderCards((event, cards) => {
         `
     })
 })
-
-
-//==============================================================================
-window.addEventListener('DOMContentLoaded', () => {
-    const dadosSalvos = localStorage.getItem('pedidoSelecionado')
-    if (dadosSalvos) {
-        const pedido = JSON.parse(dadosSalvos)
-
-        document.getElementById('inputIdPedido').value = pedido._id || ''
-        document.getElementById('cliente').value = pedido.nomeCliente || ''
-        document.getElementById('telefone').value = pedido.telCliente || ''
-        document.getElementById('endereco').value = pedido.enderecoCliente || ''
-        document.getElementById('produto').value = pedido.produto || ''
-        document.getElementById('cpf').value = pedido.cpfCliente || ''
-        document.getElementById('fio').value = pedido.fio || ''
-        document.getElementById('referencia').value = pedido.referencias || ''
-        document.getElementById('preferencia').value = pedido.preferencias || ''
-        document.getElementById('quantidade').value = pedido.qtde || ''
-        document.getElementById('valorTotal').value = pedido.valor || ''
-        document.getElementById('dataPedido').value = formatarDataParaInput(pedido.dataPedido)
-        document.getElementById('prazo').value = formatarDataParaInput(pedido.prazo)
-
-        localStorage.removeItem('pedidoSelecionado') // limpa após carregar
-    }
-})
-
-// Converte "2025-06-01T00:00:00.000Z" → "2025-06-01" (formato compatível com input date)
-function formatarDataParaInput(data) {
-    return new Date(data).toISOString().split('T')[0]
-}
-
-function verMais(pedido) {
-    localStorage.setItem('pedidoSelecionado', JSON.stringify(pedido))
-    window.location.href = './index.html' // ajuste se o caminho for diferente
-}

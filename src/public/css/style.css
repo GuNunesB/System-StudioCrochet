@@ -24,6 +24,8 @@ footer {
     position: fixed;
     bottom: 0;
     margin: 0;
+    background-color: #d7d7d7ce;
+    backdrop-filter: blur(5px);
 }
 
 footer p {

@@ -213,17 +213,16 @@ function buscarPedido() {
                 endereco.value = p.enderecoCliente
                 cpf.value = p.cpfCliente
                 tel.value = p.telCliente
-                dataPedido.value = p.dataPedido
+                dataPedido.value = formatarDataParaInput(p.dataPedido)
                 produto.value = p.produto
                 fio.value = p.fio
                 refs.value = p.referencias
                 prefs.value = p.preferencias
-                prazo.value = p.prazo
+                prazo.value = formatarDataParaInput(p.prazo)
                 qtde.value = p.qtde
                 valor.value = p.valor
                 idPedido.value = p._id
 
-                restaurarEnter()
                 btnUpdate.disabled = false
                 btnDelete.disabled = false
             })
@@ -237,4 +236,40 @@ function removePedido() {
 
 function fechar() {
     api.aboutExit()
+}
+
+//==============================================================================
+window.addEventListener('DOMContentLoaded', () => {
+    const dadosSalvos = localStorage.getItem('pedidoSelecionado')
+    if (dadosSalvos) {
+        const pedido = JSON.parse(dadosSalvos)
+
+        document.getElementById('inputIdPedido').value = pedido._id || ''
+        document.getElementById('cliente').value = pedido.nomeCliente || ''
+        document.getElementById('telefone').value = pedido.telCliente || ''
+        document.getElementById('endereco').value = pedido.enderecoCliente || ''
+        document.getElementById('produto').value = pedido.produto || ''
+        document.getElementById('cpf').value = pedido.cpfCliente || ''
+        document.getElementById('fio').value = pedido.fio || ''
+        document.getElementById('referencia').value = pedido.referencias || ''
+        document.getElementById('preferencia').value = pedido.preferencias || ''
+        document.getElementById('quantidade').value = pedido.qtde || ''
+        document.getElementById('valorTotal').value = pedido.valor || ''
+        document.getElementById('dataPedido').value = formatarDataParaInput(pedido.dataPedido)
+        document.getElementById('prazo').value = formatarDataParaInput(pedido.prazo)
+
+        localStorage.removeItem('pedidoSelecionado')
+
+        btnUpdate.disabled = false
+        btnDelete.disabled = false
+    }
+})
+
+function formatarDataParaInput(data) {
+    return new Date(data).toISOString().split('T')[0]
+}
+
+function verMais(pedido) {
+    localStorage.setItem('pedidoSelecionado', JSON.stringify(pedido))
+    window.location.href = './cadastropedidos.html'
 }
